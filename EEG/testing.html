@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EEG experiment</title>
+    <script src="jsPsych/jspsych.js"></script>
+    <script src="jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jsPsych/plugins/jspsych-html-button-response.js"></script>
+    <link href="jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    <style>
+
+    html, body { width: 100%; height: 100%; margin: 0;}
+    .coolButton {
+        width: 200px;
+        height:100px;
+        border: 1px solid #73AD21;
+    }
+    .fixation {
+      width: 600px;
+      height: 0px;
+      background-color: white;
+    }
+
+    </style>
+  </head>
+  <body>
+  </body>
+  <script>
+
+  //STIMULI
+
+    generate_list = function(list) {
+      list = jsPsych.randomization.shuffle(list);
+      var new_list;
+      while (list.length < 1200) {
+        while (list.length == new_list[0]) {
+          new_list = jsPsych.randomization.shuffle(list)
+        }
+        list = list.concat(new_list);
+      }
+    }
+
+    // list of negative distractors (56)
+    var distractors_neg = [
+      'Angry face 1.jpg', 'Angry face 2.jpg', 'Angry face 3.jpg',
+      'Angry face 4.jpg', 'Angry face 5.jpg', 'Bear 1.jpg', 'Bear 2.jpg', 'Bear 3.jpg',
+    ];
+    distractors_neg = generate_list(distractors_neg);
+
+    // list of neutral distractors (56)
+    var distractors_neu = [
+      'Beach 1.jpg', 'Beach 2.jpg', 'Beach 3.jpg', 'Beach 4.jpg',
+      'Beach 5.jpg', 'Beach 6.jpg', 'Beach 7.jpg', 'Beach 8.jpg',
+    ];
+    distractors_neu = generate_list(distractors_neu);
+
+    // list of baseline distractors
+    var distractors_bas = [
+      'Camping 1.jpg', 'Camping 2.jpg', 'Camping 3.jpg', 'Camping 4.jpg',
+      'Camping 5.jpg', 'Camping 6.jpg', 'Camping 7.jpg', 'Camping 8.jpg',
+    ];
+    distractors_bas = generate_list(distractors_bas);
+
+    // lists of baselines (252)
+    var baselines = [
+      'Acorns 1.jpg', 'Acorns 2.jpg', 'Acorns 3.jpg', 'Flowers 1.jpg',
+      'Flowers 2.jpg', 'Flowers 3.jpg', 'Flowers 4.jpg', 'Flowers 5.jpg',
+      'Flowers 6.jpg', 'Flowers 7.jpg',  'Flowers 8.jpg', 'Flowers 9.jpg', 'Flowers 10.jpg',
+      'Acorns 1.jpg', 'Acorns 2.jpg', 'Acorns 3.jpg', 'Flowers 1.jpg',
+      'Flowers 2.jpg', 'Flowers 3.jpg', 'Flowers 4.jpg', 'Flowers 5.jpg',
+      'Flowers 6.jpg', 'Flowers 7.jpg',  'Flowers 8.jpg', 'Flowers 9.jpg', 'Flowers 10.jpg',
+    ];
+    baselines = generate_list(baselines);
+
+    var used_baselines = [];
+
+    // lists of left-orienting targets (64)
+    var targets_left = [
+      'Baby 1.jpg', 'Baby 2. jpg', 'Baby 3.jpg', 'Baby 4.jpg', 'Baby 5.jpg',
+      'Baby 6.jpg', 'Baby 7.jpg', 'Baby 8.jpg', 'Baby 9.jpg', 'Baby 10.jpg'
+    ];
+    targets_left = generate_list(targets_left);
+
+    // lists of right-orienting targets (64)
+    var targets_right = [
+      'Couple 1.jpg', 'Couple 2.jpg', 'Couple 3.jpg', 'Couple 4.jpg', 'Couple 5.jpg',
+      'Couple 6.jpg', 'Couple 7.jpg', 'Couple 8.jpg', 'Couple 9.jpg',
+    ];
+    targets_right = generate_list(targets_right);
+
+  //--------------------------------------------------------------------------
+
+  // PROCEDURE
+
+    // initiliaze timeline
+    var timeline = [];
+    var blockcount = 0;
+
+    var welcome = {
+      type: "html-keyboard-response",
+      stimulus: "Welcome to the experiment. Press any key to begin.",
+    };
+    timeline.push(welcome);
+
+    var instructions = {
+      type: "html-keyboard-response",
+      stimulus: "There will be a rotated image among a series of upright images. \
+       The image will be rotated 90 degrees right or left. \
+       Search for this image and remember if it is rotated right or left. \
+       \
+       Images of people and animals will appear, and sometimes they will be unpleasant. \
+       These will never be the rotated target image.",
+    };
+    timeline.push(instructions);
+
+    var practice_instruction = {
+        type: "html-keyboard-response",
+        stimulus: "We will now begin a short practice session."
+    }
+
+    var fixation = {
+      type: "html-keyboard-response",
+      stimulus: '<div style="font-size:60px;">+</div>',
+      button_html: '<button class="fixation">%choice%</button>',
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 1000,
+    };
+
+    // baseline stimuli
+    var b = {
+      type: "html-keyboard-response",
+      stimulus: function() { return "<p><img src='images/" + baselines.pop() + "'></img></p>" },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+    }
+
+    var pos_4 = {
+      type: "html-keyboard-response",
+      stimulus: function(){
+        // imagine this if statement is checking if this is where a distractor should be...
+        if(jsPsych.timelineVariable('distractor_position', true) == 4){
+          // if the distractor should be here, we get the right kind of distractor...
+          if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
+            var distractor = distractors_neg.pop();
+            used_distractors_neg.push(distractor);
+            return "<p><img src='images/" + distractor + "'></img></p>"
+          } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
+            var distractor = distractors_neu.pop();
+            used_distractors_neu.push(distractor);
+            return "<p><img src='images/" + distractor + "'></img></p>"
+          } else {
+            var baseline = baselines.pop();
+            used_baselines.push(baseline);
+            return "<p><img src='images/" + baseline + "'></img></p>"
+          }
+        } else {
+          var baseline = baselines.pop();
+          used_baselines.push(baseline);
+          return "<p><img src='images/" + baseline + "'></img></p>"
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+    }
+
+    var pos_6 = {
+      type: "html-keyboard-response",
+      stimulus: function(){
+        // imagine this if statement is checking if this is where a distractor OR target should be...
+        if(jsPsych.timelineVariable('distractor_position', true) == 6){
+          if(jsPsych.timelineVariable('distractor_position', true) == 4){
+            // if the distractor should be here, we get the right kind of distractor...
+            if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
+              var distractor = distractors_neg.pop();
+              used_distractors_neg.push(distractor);
+              return "<p><img src='images/" + distractor + "'></img></p>"
+            } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
+              var distractor = distractors_neu.pop();
+              used_distractors_neu.push(distractor);
+              return "<p><img src='images/" + distractor + "'></img></p>"
+            } else {
+              var baseline = baselines.pop();
+              used_baselines.push(baseline);
+              return "<p><img src='images/" + baseline + "'></img></p>"
+            }
+          }
+        } else if (jsPsych.timelineVariable('distractor_position', true) == 4 && jsPsych.timelineVariable('target_lag', true) == 2) {
+          // if the target should be here, we get the right kind of target...
+          if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
+            var target = targets_left.pop();
+            used_targets_left.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          } else {
+            var target = targets_right.pop();
+            used_targets_right.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          }
+        } else {
+          var baseline = baselines.pop();
+          used_baselines.push(baseline);
+          return "<p><img src='images/" + baseline + "'></img></p>"
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+    }
+
+    var pos_8 = {
+      type: "html-keyboard-response",
+      stimulus: function(){
+        // imagine this if statement is checking if this is where a target should be...
+        if(jsPsych.timelineVariable('distractor_position', true) == 6 && jsPsych.timelineVariable('target_lag', true) == 2){
+          // if the target should be here, we get the right kind of target...
+          if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
+            var target = targets_left.pop();
+            used_targets_left.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          } else {
+            var target = targets_right.pop();
+            used_targets_right.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          }
+        } else {
+          var baseline = baselines.pop();
+          used_baselines.push(baseline);
+          return "<p><img src='images/" + baseline + "'></img></p>"
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+    }
+
+    var pos_12 = {
+      type: "html-keyboard-response",
+      stimulus: function(){
+        // imagine this if statement is checking if this is where a target should be...
+        if(jsPsych.timelineVariable('distractor_position', true) == 4 && jsPsych.timelineVariable('target_lag', true) == 8){
+          // if the target should be here, we get the right kind of target...
+          if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
+            var target = targets_left.pop();
+            used_targets_left.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          } else {
+            var target = targets_right.pop();
+            used_targets_right.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          }
+        } else {
+          var baseline = baselines.pop();
+          used_baselines.push(baseline);
+          return "<p><img src='images/" + baseline + "'></img></p>"
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+    }
+
+    var pos_14 = {
+      type: "html-keyboard-response",
+      stimulus: function(){
+        // imagine this if statement is checking if this is where a distractor should be...
+        if(jsPsych.timelineVariable('distractor_position', true) == 6 && jsPsych.timelineVariable('target_lag', true) == 8){
+          // if the target should be here, we get the right kind of target...
+          if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
+            var target = targets_left.pop();
+            used_targets_left.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          } else {
+            var target = targets_right.pop();
+            used_targets_right.push(target);
+            return "<p><img src='images/" + target + "'></img></p>"
+          }
+        } else {
+          var baseline = baselines.pop();
+          used_baselines.push(baseline);
+          return "<p><img src='images/" + baseline + "'></img></p>"
+        }
+      },
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+    }
+
+    var last = {
+      type: "html-keyboard-response",
+      stimulus: "<p><img src='images/" + baselines.pop() + "'></img></p>",
+      choices: jsPsych.NO_KEYS,
+      trial_duration: jsPsych.timelineVariable('trial_duration'),
+      post_trial_gap: 1000,
+    }
+
+    var response = {
+      type: 'html-button-response',
+      stimulus: '<p style="position:relative; top:30%">WAS THE IMAGE ROTATED...</p>',
+      choices: ['LEFT Very Sure', 'LEFT Somewhat Sure', 'LEFT Guess', +
+                 'RIGHT Very Sure', 'RIGHT Somewhat Sure', 'RIGHT Guess'],
+      data : {
+        distractor_position: jsPsych.timelineVariable('distractor_position'),
+        target_lag: jsPsych.timelineVariable('target_lag'),
+        distractor_type: jsPsych.timelineVariable('distractor_type'),
+        target_orientation: jsPsych.timelineVariable('target_orientation'), // variable that will contain info abt target_direction
+        //trial_condition: "distractor", // type of trial (distractor, etc)
+        phase: jsPsych.timelineVariable('phase'), // when we get spreadsheet back, we can filter out all test_trial
+      },
+      button_html: [
+        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 30%;  left: 10%;">LEFT<BR>(VERY SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 50%;  left: 10%;">LEFT<BR>(SOMEWHAT SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 70%;  left: 10%;">LEFT<BR>(GUESS)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 30%;  right: 10%;">RIGHT<BR>(VERY SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 50%;  right: 10%;">RIGHT<BR>(SOMEWHAT SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 70%;  right: 10%;">RIGHT<BR>(GUESS)</button>'],
+
+             on_finish: function(data){ // data will contain all properties recorded during the trial, including button_pressed and target_direction
+                    if(data.target_orientation == "left"){
+                        data.correct = (data.button_pressed == 0 || data.button_pressed == 1);
+                    } else if (data.target_orientation == "right"){
+                        data.correct = (data.button_pressed == 3 || data.button_pressed == 4);
+                    } else {
+                        data.correct = null;
+                    }
+                    console.log(data);
+                }
+
+         };
+
+    var parameters = {
+      distractor_position: [4,6],
+      target_lag: [2, 8],
+      distractor_type: ['neg','neu','bas'],
+      target_orientation: ['left', 'right'],
+      trial_duration: [100],
+      phase: ['test']
+    }
+
+    var practice_parameters = {
+      distractor_position: [4,6],
+      target_lag: [2, 8],
+      distractor_type: ['bas'],
+      target_orientation: ['left', 'right'],
+      trial_duration: [200],
+      phase: ['practice']
+    }
+
+    var non_distractor = {
+      distractor_position: null,
+      target_lag: null,
+      distractor_type: null,
+      target_orientation: null,
+      phase: 'test'
+    }
+
+    var trial_types = jsPsych.randomization.factorial(parameters, 1);
+    trial_types.push(non_distractor, non_distractor);
+    var practice_types = jsPsych.randomization.factorial(practice_parameters, 1);
+    var practice_tvs = jsPsych.utils.deepCopy(jsPsych.randomization.shuffle(practice_types));
+    practice_tvs = practice_tvs.concat(jsPsych.utils.deepCopy(jsPsych.randomization.shuffle(practice_types)));
+    for(var i=0; i<practice_tvs.length; i++){
+      if(i < 4){
+        practice_tvs[i].trial_duration = 200;
+      } else if(i < 8) {
+        practice_tvs[i].trial_duration = 150;
+      } else {
+        practice_tvs[i].trial_duration = 100;
+      }
+    }
+
+    var practice_trial = {
+      timeline: [practice_instruction, fixation, b, b, b, pos_4, b, pos_6, b, pos_8, b, b, b, pos_12, b, pos_14, b, b, last, response],
+      timeline_variables: practice_tvs
+    }
+    timeline.push(practice_trial);
+
+
+        var instruction_reminder = {
+            type: "html-keyboard-response",
+            stimulus: "Search for a rotated image among the series of upright images. \
+            Please do not blink while the images are on the screen.",
+        }
+        timeline.push(instruction_reminder);
+
+    var real_trial = {
+      timeline: [fixation, b, b, b, pos_4, b, pos_6, b, pos_8, b, b, b, pos_12, b, pos_14, b, b, last, response],
+      timeline_variables: trial_types,
+      sample: {
+        type: 'fixed-repetitions', // repeat randomly
+        size: 5,
+      }
+    }
+
+    var break_screen = {
+      type: 'html-keyboard-response',
+      stimulus: "<p><img src='img/break.jpg'></img></p> \
+      <p>This is your opportunity to take a break and rest your eyes. Press any key to continue.</p>"
+    }
+
+    var break_node = {
+        timeline: [break_screen],
+        conditional_function: function() {
+            if(blockcount = 5){
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    var trial_block = {
+      blockcount++;
+      timeline: [real_trial, break_node],
+      repetitions: 5,
+    }
+    timeline.push(trial_block);
+
+    var congrats = {
+      type: 'html-keyboard-response',
+      stimulus: "<p><img src='img/congrats.gif'></img></p> \
+      <p>Well done, you made it! Press any key to continue.</p>",
+    }
+    timeline.push(congrats);
+
+    var debrief = {
+      type: "html-keyboard-response",
+      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!'
+    };
+    timeline.push(debrief);
+
+    jsPsych.init({
+      timeline: timeline,
+    });
+
+    </script>
+  </html>
