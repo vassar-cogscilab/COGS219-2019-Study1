@@ -326,7 +326,7 @@ class NetStation {
     }
 
     async sendSimpleEvent(markerCode, timestamp=null) {
-        let currentTime = timestamp || (((new Date()).getTime()) % (1000 * 60 * 60 * 24));
+        let currentTime = timestamp || Date.now() % (1000 * 60 * 60 * 24);
         let default_duration = 1; // also in milliseconds
         let sizeof_int32 = 4;
         let event_min_size = 3 * sizeof_int32;
