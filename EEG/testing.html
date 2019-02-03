@@ -309,7 +309,10 @@
       type: "html-button-response",
       stimulus: '',
       choices: ['+'],
-      button_html: '<button class="fixation">%choice%</button>'
+      button_html: '<button class="fixation">%choice%</button>',
+      on_start: function(){
+        jsPsych.hardware.netstation.sync();
+      }
     };
 
     // baseline stimuli
