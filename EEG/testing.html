@@ -444,7 +444,9 @@
 
     var last = {
       type: "html-keyboard-response",
-      stimulus: "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>",
+      stimulus: function() {
+        return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>"
+      },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
       post_trial_gap: 1000,
