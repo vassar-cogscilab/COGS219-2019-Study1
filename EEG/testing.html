@@ -406,13 +406,12 @@
     }
     timeline.push(practice_trial);
 
-
-        var instruction_reminder = {
-            type: "html-keyboard-response",
-            stimulus: "Search for a rotated image among the series of upright images. \
-            Please do not blink while the images are on the screen.",
-        }
-        timeline.push(instruction_reminder);
+    var instruction_reminder = {
+        type: "html-keyboard-response",
+        stimulus: "Search for a rotated image among the series of upright images. \
+        Please do not blink while the images are on the screen.",
+    }
+    timeline.push(instruction_reminder);
 
     var real_trial = {
       timeline: [fixation, b, b, b, pos_4, b, pos_6, b, pos_8, b, b, b, pos_12, b, pos_14, b, b, last, response],
@@ -430,14 +429,14 @@
     }
 
     var break_node = {
-        timeline: [break_screen],
-        conditional_function: function() {
-            if(blockcount = 5){
-                return false;
-            } else {
-                return true;
-            }
+      timeline: [break_screen],
+      conditional_function: function() {
+        if(blockcount == 5){
+            return false;
+        } else {
+            return true;
         }
+      }
     }
 
     var trial_block = {
