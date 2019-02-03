@@ -95,6 +95,7 @@
     // initiliaze timeline
     var timeline = [];
     var blockcount = 0;
+    var id = null;
 
     var id_entry = {
       type: 'survey-text',
@@ -102,10 +103,11 @@
         {prompt: 'Enter the participant ID'}
       ],
       on_finish: function(data){
-        var id = JSON.parse(data.responses).Q0;
+        id = JSON.parse(data.responses).Q0;
         jsPsych.data.addProperties({participant_id: id});
       }
     }
+    timeline.push(id_entry);
 
     var welcome = {
       type: "html-keyboard-response",
@@ -430,7 +432,10 @@
 
     var debrief = {
       type: "html-keyboard-response",
-      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!'
+      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!',
+      on_start: function(){
+        jsPsych.data.get().localSave('csv','participant_'+id+'_behavioral.csv');
+      }
     };
     timeline.push(debrief);
 
