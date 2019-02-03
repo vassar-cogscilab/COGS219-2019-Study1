@@ -1,0 +1,37 @@
+{
+  "name": "jspsych-socket-server",
+  "version": "0.0.0",
+  "description": "A socket.io based server for running jsPsych experiments",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "jest --runInBand --forceExit"
+  },
+  "jest": {
+    "globals": {
+      "__TEST__": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jspsych/jsPsych-socket-server.git"
+  },
+  "keywords": [
+    "jsPsych",
+    "experiment",
+    "science"
+  ],
+  "author": "Josh de Leeuw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jspsych/jsPsych-socket-server/issues"
+  },
+  "homepage": "https://github.com/jspsych/jsPsych-socket-server#readme",
+  "dependencies": {
+    "clone": "^1.0.4",
+    "express": "^4.16.3",
+    "jest": "^23.6.0",
+    "python-struct": "^1.0.6",
+    "socket.io": "^2.2.0",
+    "uuid": "^3.2.1"
+  }
+}
