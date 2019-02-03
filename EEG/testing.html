@@ -319,7 +319,7 @@
     var b = {
       type: "html-keyboard-response",
       stimulus: function() {
-        return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>"
+        return "<p><img class= 'stimulus' src='images/baseline/" + baselines.pop() + "'></img></p>"
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
@@ -333,17 +333,17 @@
           // if the distractor should be here, we get the right kind of distractor...
           if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
             var distractor = distractors_neg.pop();
-            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/negative/" + distractor + "'></img></p>"
           } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
             var distractor = distractors_neu.pop();
-            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/neutral/" + distractor + "'></img></p>"
           } else {
             var baseline = baselines.pop();
-            return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/baseline/" + baseline + "'></img></p>"
           }
         } else {
           var baseline = baselines.pop();
-          return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+          return "<p><img class= 'stimulus' src='images/baseline/" + baseline + "'></img></p>"
         }
       },
       choices: jsPsych.NO_KEYS,
@@ -358,31 +358,31 @@
           // if the distractor should be here, we get the right kind of distractor...
           if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
             var distractor = distractors_neg.pop();
-            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+            return "<p><img class= 'stimulus' src='negative/" + distractor + "'></img></p>"
           } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
             var distractor = distractors_neu.pop();
-            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/neutral/" + distractor + "'></img></p>"
           } else {
             var baseline = baselines.pop();
-            return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/baseline/" + baseline + "'></img></p>"
           }
         } else if (jsPsych.timelineVariable('distractor_position', true) == 4 && jsPsych.timelineVariable('target_lag', true) == 2) {
           // if the target should be here, we get the right kind of target...
           if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
             var target = targets_left.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target/" + target + "'></img></p>"
           } else {
             var target = targets_right.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target/" + target + "'></img></p>"
           }
         } else {
           var baseline = baselines.pop();
-          return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+          return "<p><img class= 'stimulus' src='images/baseline/" + baseline + "'></img></p>"
         }
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
-    } 
+    }
 
     var pos_8 = {
       type: "html-keyboard-response",
@@ -392,14 +392,14 @@
           // if the target should be here, we get the right kind of target...
           if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
             var target = targets_left.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target" + target + "'></img></p>"
           } else {
             var target = targets_right.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target" + target + "'></img></p>"
           }
         } else {
           var baseline = baselines.pop();
-          return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+          return "<p><img class= 'stimulus' src='images/baseline" + baseline + "'></img></p>"
         }
       },
       choices: jsPsych.NO_KEYS,
@@ -414,14 +414,14 @@
           // if the target should be here, we get the right kind of target...
           if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
             var target = targets_left.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target" + target + "'></img></p>"
           } else {
             var target = targets_right.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target" + target + "'></img></p>"
           }
         } else {
           var baseline = baselines.pop();
-          return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+          return "<p><img class= 'stimulus' src='images/baseline" + baseline + "'></img></p>"
         }
       },
       choices: jsPsych.NO_KEYS,
@@ -436,14 +436,14 @@
           // if the target should be here, we get the right kind of target...
           if(jsPsych.timelineVariable('target_orientation', true) == 'left'){
             var target = targets_left.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target" + target + "'></img></p>"
           } else {
             var target = targets_right.pop();
-            return "<p><img class= 'stimulus' src='images/" + target + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/target" + target + "'></img></p>"
           }
         } else {
           var baseline = baselines.pop();
-          return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
+          return "<p><img class= 'stimulus' src='images/baseline" + baseline + "'></img></p>"
         }
       },
       choices: jsPsych.NO_KEYS,
@@ -453,7 +453,7 @@
     var last = {
       type: "html-keyboard-response",
       stimulus: function() {
-        return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>"
+        return "<p><img class= 'stimulus' src='images/baseline" + baselines.pop() + "'></img></p>"
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
