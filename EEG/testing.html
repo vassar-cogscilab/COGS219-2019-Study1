@@ -19,12 +19,15 @@
       border: 1px solid #73AD21;
     }
     .fixation {
-      font-size: 22px;
+      font-size: 40px;
       border: 0;
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100vh;
+      position: absolute;
+      left: 0;
+      top: 0;
       background-color: white;
     }
 
@@ -91,13 +94,6 @@
       'swan.jpg','thailand-girl.jpg','zebras.jpg',
     ];
     distractors_neu = generate_list(distractors_neu);
-
-    // list of baseline distractors
-    var distractors_bas = [
-      'Camping 1.jpg', 'Camping 2.jpg', 'Camping 3.jpg', 'Camping 4.jpg',
-      'Camping 5.jpg', 'Camping 6.jpg', 'Camping 7.jpg', 'Camping 8.jpg',
-    ];
-    distractors_bas = generate_list(distractors_bas);
 
     // lists of baselines (252)
     var baselines = [
@@ -281,16 +277,16 @@
       stimulus: "Welcome to the experiment.",
       choices: ['C'],
       on_finish: function(){
-        jsPsych.hardware.netstation.connect();
-        jsPsych.hardware.netstation.beginSession();
-        jsPsych.hardware.netstation.sync();
-        jsPsych.hardware.netstation.startRecording();
+        //jsPsych.hardware.netstation.connect();
+        //jsPsych.hardware.netstation.beginSession();
+        //jsPsych.hardware.netstation.sync();
+        //jsPsych.hardware.netstation.startRecording();
       }
     };
     timeline.push(welcome);
 
     var instructions = {
-      type: "html-keyboard-response",
+      type: "html-button-response",
       stimulus: "<p>Several images will be presented sequentially. \
        Each image will only be on the screen for about 100 milliseconds.</p> \
        <p> One of the images may be rotated 90 degrees right or left. \
@@ -298,12 +294,14 @@
        \
        <p>Images of people and animals will appear, and sometimes they will be unpleasant. \
        These will never be the rotated target image.</p>",
+       choices: ['Continue']
     };
     timeline.push(instructions);
 
     var practice_instruction = {
-        type: "html-keyboard-response",
-        stimulus: "We will now begin a short practice session."
+        type: "html-button-response",
+        stimulus: "<p>We will now begin a short practice session.</p>",
+        choices: ['I am ready']
     }
     timeline.push(practice_instruction);
 
@@ -311,13 +309,18 @@
       type: "html-button-response",
       stimulus: '',
       choices: ['+'],
-      button_html: '<button class="fixation">%choice%</button>'
+      button_html: '<button class="fixation">%choice%</button>',
+      on_start: function(){
+        //jsPsych.hardware.netstation.sync();
+      }
     };
 
     // baseline stimuli
     var b = {
       type: "html-keyboard-response",
-      stimulus: function() { return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>" },
+      stimulus: function() {
+        return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>"
+      },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
     }
@@ -352,18 +355,16 @@
       stimulus: function(){
         // imagine this if statement is checking if this is where a distractor OR target should be...
         if(jsPsych.timelineVariable('distractor_position', true) == 6){
-          if(jsPsych.timelineVariable('distractor_position', true) == 4){
-            // if the distractor should be here, we get the right kind of distractor...
-            if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
-              var distractor = distractors_neg.pop();
-              return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
-            } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
-              var distractor = distractors_neu.pop();
-              return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
-            } else {
-              var baseline = baselines.pop();
-              return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
-            }
+          // if the distractor should be here, we get the right kind of distractor...
+          if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
+            var distractor = distractors_neg.pop();
+            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+          } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
+            var distractor = distractors_neu.pop();
+            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+          } else {
+            var baseline = baselines.pop();
+            return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
           }
         } else if (jsPsych.timelineVariable('distractor_position', true) == 4 && jsPsych.timelineVariable('target_lag', true) == 2) {
           // if the target should be here, we get the right kind of target...
@@ -381,7 +382,7 @@
       },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
-    }
+    } 
 
     var pos_8 = {
       type: "html-keyboard-response",
@@ -451,7 +452,9 @@
 
     var last = {
       type: "html-keyboard-response",
-      stimulus: "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>",
+      stimulus: function() {
+        return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>"
+      },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
       post_trial_gap: 1000,
@@ -468,7 +471,6 @@
         target_lag: jsPsych.timelineVariable('target_lag'),
         distractor_type: jsPsych.timelineVariable('distractor_type'),
         target_orientation: jsPsych.timelineVariable('target_orientation'), // variable that will contain info abt target_direction
-        //trial_condition: "distractor", // type of trial (distractor, etc)
         phase: jsPsych.timelineVariable('phase'), // when we get spreadsheet back, we can filter out all test_trial
       },
       button_html: [
@@ -488,7 +490,7 @@
         } else {
             data.correct = null;
         }
-        jsPsych.hardware.netstation.sendEvent({
+        /*jsPsych.hardware.netstation.sendEvent({
           key: 'stm+',
           timestamp: 0,
           label: 'distractor',
@@ -500,7 +502,7 @@
             tarori: data.target_orientation,
             tarlag: data.target_lag
           }
-        });
+        });*/
       }
     };
 
@@ -537,7 +539,7 @@
     practice_tvs = practice_tvs.concat(jsPsych.utils.deepCopy(jsPsych.randomization.shuffle(practice_types)));
     for(var i=0; i<practice_tvs.length; i++){
       if(i < 4){
-        practice_tvs[i].trial_duration = 200;
+        practice_tvs[i].trial_duration = 500;
       } else if(i < 8) {
         practice_tvs[i].trial_duration = 150;
       } else {
