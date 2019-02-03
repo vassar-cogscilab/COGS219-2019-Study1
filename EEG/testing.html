@@ -554,10 +554,11 @@
     timeline.push(practice_trial);
 
     var instruction_reminder = {
-      type: "html-keyboard-response",
-      stimulus: "You have now completed the practice phase. We will now begin the real trials. \
-        This is a reminder that you will be searching for a rotated image among the series of upright images. \
-        Please do not blink while the images are on the screen. Press any key to begin.",
+      type: "html-button-response",
+      stimulus: "<p>You have now completed the practice phase. We will now begin the real trials. \
+        This is a reminder that you will be searching for a rotated image among the series of upright images.</p> \
+        <p>Remember, please do not blink or move your eyes while the images are on the screen.</p>",
+      choices: ["Continue"]
     }
     timeline.push(instruction_reminder);
 
@@ -571,9 +572,9 @@
     }
 
     var break_screen = {
-      type: 'html-keyboard-response',
-      stimulus: "<p><img src='img/break.jpg'></img></p> \
-      <p>This is your opportunity to take a break and rest your eyes. Press any key to continue.</p>",
+      type: 'html-button-response',
+      stimulus: "<p>This is your opportunity to take a break and rest your eyes.</p>",
+      choices: ["Continue"],
       on_finish: function(){blockcount++}
     }
 
@@ -594,17 +595,12 @@
     }
     timeline.push(trial_block);
 
-    var congrats = {
-      type: 'html-keyboard-response',
-      stimulus: "<p><img src='img/congrats.gif'></img></p> \
-      <p>Well done, you made it! Press any key to continue.</p>",
-    }
-    timeline.push(congrats);
-
     var debrief = {
       type: "html-keyboard-response",
-      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!',
-      on_start: function(){
+      stimulus: '<p>Congratulations! You have completed all of the trials. Thank you for helping us with our research!</p>'+
+        '<p>Please alert the researcher that you have finished the experiment.</p>',
+      choices: ['C'],
+      on_finish: function(){
         jsPsych.data.get().localSave('csv','participant_'+id+'_behavioral.csv');
       }
     };
