@@ -111,18 +111,20 @@
 
     var welcome = {
       type: "html-keyboard-response",
-      stimulus: "Welcome to the experiment. Press any key to begin.",
+      stimulus: "Welcome to the experiment.",
+      choices: ['C']
     };
     timeline.push(welcome);
 
     var instructions = {
       type: "html-keyboard-response",
-      stimulus: "There will be a rotated image among a series of upright images. \
-       The image will be rotated 90 degrees right or left. \
-       Search for this image and remember if it is rotated right or left. \
+      stimulus: "<p>Several images will be presented sequentially. \
+       Each image will only be on the screen for about 100 milliseconds.</p> \
+       <p> One of the images may be rotated 90 degrees right or left. \
+       Watch for this image and remember if it is rotated right or left.</p> \
        \
-       Images of people and animals will appear, and sometimes they will be unpleasant. \
-       These will never be the rotated target image.",
+       <p>Images of people and animals will appear, and sometimes they will be unpleasant. \
+       These will never be the rotated target image.</p>",
     };
     timeline.push(instructions);
 
