@@ -14,9 +14,16 @@
     html, body { width: 100%; height: 100%; margin: 0;}
 
     .coolButton {
-      width: 200px;
-      height:100px;
+      width: 170px;
+      height:86px;
       border: 1px solid #73AD21;
+    }
+    .response_question {
+        position: absolute;
+        top: calc(50% - 240px);
+        right: calc(40%);
+        left: calc(40%);
+        font-size: 20px;
     }
     .fixation {
       font-size: 40px;
@@ -474,12 +481,12 @@
         phase: jsPsych.timelineVariable('phase'), // when we get spreadsheet back, we can filter out all test_trial
       },
       button_html: [
-        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 30%;  left: 10%;">LEFT<BR>(VERY SURE)</button>',
-        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 50%;  left: 10%;">LEFT<BR>(SOMEWHAT SURE)</button>',
-        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 70%;  left: 10%;">LEFT<BR>(GUESS)</button>',
-        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 30%;  right: 10%;">RIGHT<BR>(VERY SURE)</button>',
-        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 50%;  right: 10%;">RIGHT<BR>(SOMEWHAT SURE)</button>',
-        '<button class="jspsych-btn coolButton" style= "position: fixed;  top: 70%;  right: 10%;">RIGHT<BR>(GUESS)</button>'
+        '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% - 160px);  left: calc(50% - 180px);">LEFT<BR>(VERY SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% - 60px);  left: calc(50% - 180px);">LEFT<BR>(SOMEWHAT SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% + 30px);  left: calc(50% - 180px);">LEFT<BR>(GUESS)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% - 160px);  right: calc(50% - 180px);">RIGHT<BR>(VERY SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% - 60px);  right: calc(50% - 180px);">RIGHT<BR>(SOMEWHAT SURE)</button>',
+        '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% + 30px);  right: calc(50% - 180px);">RIGHT<BR>(GUESS)</button>'
       ],
 
       on_finish: function(data){ // data will contain all properties recorded during the trial, including button_pressed and target_direction
