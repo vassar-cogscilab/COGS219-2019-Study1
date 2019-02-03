@@ -144,6 +144,7 @@
         type: "html-keyboard-response",
         stimulus: "We will now begin a short practice session."
     }
+    timeline.push(practice_instruction);
 
 >>>>>>> 0881d54ed9b3155ffa4c57a245efec32706c1045
     var fixation = {
@@ -372,29 +373,6 @@
         practice_tvs[i].trial_duration = 100;
       }
     }
-
-    var welcome = {
-      type: "html-keyboard-response",
-      stimulus: "Welcome to the experiment. Press any key to begin.",
-    };
-    timeline.push(welcome);
-
-    var instructions = {
-      type: "html-keyboard-response",
-      stimulus: "There will be a rotated image among a series of upright images. \
-       The image will be rotated 90 degrees right or left. \
-       Search for this image and remember if it is rotated right or left. \
-       \
-       Images of people and animals will appear, and sometimes they will be unpleasant. \
-       These will never be the rotated target image.",
-    };
-    timeline.push(instructions);
-
-    var practice_instruction = {
-        type: "html-keyboard-response",
-        stimulus: "We will now begin a short practice session."
-    }
-    timeline.push(practice_instruction);
 
     var practice_trial = {
       timeline: [fixation, b, b, b, pos_4, b, pos_6, b, pos_8, b, b, b, pos_12, b, pos_14, b, b, last, response],
