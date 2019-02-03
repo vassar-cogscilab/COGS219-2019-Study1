@@ -5,6 +5,7 @@
     <script src="jsPsych/jspsych.js"></script>
     <script src="jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jsPsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jsPsych/plugins/jspsych-survey-text.js"></script>
     <link href="jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     <style>
 
@@ -94,21 +95,36 @@
     // initiliaze timeline
     var timeline = [];
     var blockcount = 0;
+    var id = null;
+
+    var id_entry = {
+      type: 'survey-text',
+      questions: [
+        {prompt: 'Enter the participant ID'}
+      ],
+      on_finish: function(data){
+        id = JSON.parse(data.responses).Q0;
+        jsPsych.data.addProperties({participant_id: id});
+      }
+    }
+    timeline.push(id_entry);
 
     var welcome = {
       type: "html-keyboard-response",
-      stimulus: "Welcome to the experiment. Press any key to begin.",
+      stimulus: "Welcome to the experiment.",
+      choices: ['C']
     };
     timeline.push(welcome);
 
     var instructions = {
       type: "html-keyboard-response",
-      stimulus: "There will be a rotated image among a series of upright images. \
-       The image will be rotated 90 degrees right or left. \
-       Search for this image and remember if it is rotated right or left. \
+      stimulus: "<p>Several images will be presented sequentially. \
+       Each image will only be on the screen for about 100 milliseconds.</p> \
+       <p> One of the images may be rotated 90 degrees right or left. \
+       Watch for this image and remember if it is rotated right or left.</p> \
        \
-       Images of people and animals will appear, and sometimes they will be unpleasant. \
-       These will never be the rotated target image.",
+       <p>Images of people and animals will appear, and sometimes they will be unpleasant. \
+       These will never be the rotated target image.</p>",
     };
     timeline.push(instructions);
 
@@ -418,7 +434,10 @@
 
     var debrief = {
       type: "html-keyboard-response",
-      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!'
+      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!',
+      on_start: function(){
+        jsPsych.data.get().localSave('csv','participant_'+id+'_behavioral.csv');
+      }
     };
     timeline.push(debrief);
 
