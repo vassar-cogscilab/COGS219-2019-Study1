@@ -5,6 +5,7 @@
     <script src="jsPsych/jspsych.js"></script>
     <script src="jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jsPsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jsPsych/plugins/jspsych-survey-text.js"></script>
     <link href="jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     <style>
 
@@ -94,6 +95,17 @@
     // initiliaze timeline
     var timeline = [];
     var blockcount = 0;
+
+    var id_entry = {
+      type: 'survey-text',
+      questions: [
+        {prompt: 'Enter the participant ID'}
+      ],
+      on_finish: function(data){
+        var id = JSON.parse(data.responses).Q0;
+        jsPsych.data.addProperties({participant_id: id});
+      }
+    }
 
     var welcome = {
       type: "html-keyboard-response",
