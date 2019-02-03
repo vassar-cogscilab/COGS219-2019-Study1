@@ -19,12 +19,15 @@
       border: 1px solid #73AD21;
     }
     .fixation {
-      font-size: 22px;
+      font-size: 40px;
       border: 0;
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100vh;
+      position: absolute;
+      left: 0;
+      top: 0;
       background-color: white;
     }
 
@@ -274,16 +277,16 @@
       stimulus: "Welcome to the experiment.",
       choices: ['C'],
       on_finish: function(){
-        jsPsych.hardware.netstation.connect();
-        jsPsych.hardware.netstation.beginSession();
-        jsPsych.hardware.netstation.sync();
-        jsPsych.hardware.netstation.startRecording();
+        //jsPsych.hardware.netstation.connect();
+        //jsPsych.hardware.netstation.beginSession();
+        //jsPsych.hardware.netstation.sync();
+        //jsPsych.hardware.netstation.startRecording();
       }
     };
     timeline.push(welcome);
 
     var instructions = {
-      type: "html-keyboard-response",
+      type: "html-button-response",
       stimulus: "<p>Several images will be presented sequentially. \
        Each image will only be on the screen for about 100 milliseconds.</p> \
        <p> One of the images may be rotated 90 degrees right or left. \
@@ -291,12 +294,14 @@
        \
        <p>Images of people and animals will appear, and sometimes they will be unpleasant. \
        These will never be the rotated target image.</p>",
+       choices: ['Continue']
     };
     timeline.push(instructions);
 
     var practice_instruction = {
-        type: "html-keyboard-response",
-        stimulus: "We will now begin a short practice session."
+        type: "html-button-response",
+        stimulus: "<p>We will now begin a short practice session.</p>",
+        choices: ['I am ready']
     }
     timeline.push(practice_instruction);
 
@@ -304,7 +309,10 @@
       type: "html-button-response",
       stimulus: '',
       choices: ['+'],
-      button_html: '<button class="fixation">%choice%</button>'
+      button_html: '<button class="fixation">%choice%</button>',
+      on_start: function(){
+        //jsPsych.hardware.netstation.sync();
+      }
     };
 
     // baseline stimuli
@@ -463,7 +471,6 @@
         target_lag: jsPsych.timelineVariable('target_lag'),
         distractor_type: jsPsych.timelineVariable('distractor_type'),
         target_orientation: jsPsych.timelineVariable('target_orientation'), // variable that will contain info abt target_direction
-        //trial_condition: "distractor", // type of trial (distractor, etc)
         phase: jsPsych.timelineVariable('phase'), // when we get spreadsheet back, we can filter out all test_trial
       },
       button_html: [
@@ -483,7 +490,7 @@
         } else {
             data.correct = null;
         }
-        jsPsych.hardware.netstation.sendEvent({
+        /*jsPsych.hardware.netstation.sendEvent({
           key: 'stm+',
           timestamp: 0,
           label: 'distractor',
@@ -495,7 +502,7 @@
             tarori: data.target_orientation,
             tarlag: data.target_lag
           }
-        });
+        });*/
       }
     };
 
@@ -532,7 +539,7 @@
     practice_tvs = practice_tvs.concat(jsPsych.utils.deepCopy(jsPsych.randomization.shuffle(practice_types)));
     for(var i=0; i<practice_tvs.length; i++){
       if(i < 4){
-        practice_tvs[i].trial_duration = 200;
+        practice_tvs[i].trial_duration = 500;
       } else if(i < 8) {
         practice_tvs[i].trial_duration = 150;
       } else {
