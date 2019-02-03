@@ -5,18 +5,26 @@
     <script src="jsPsych/jspsych.js"></script>
     <script src="jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jsPsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jsPsych/plugins/jspsych-survey-text.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/jspsych-netstation.js"></script>
     <link href="jsPsych/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     <style>
 
     html, body { width: 100%; height: 100%; margin: 0;}
+
     .coolButton {
         width: 200px;
         height:100px;
         border: 1px solid #73AD21;
     }
     .fixation {
-      width: 600px;
-      height: 0px;
+      font-size: 22px;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
       background-color: white;
     }
 
@@ -97,10 +105,51 @@
     // initiliaze timeline
     var timeline = [];
     var blockcount = 0;
+    var id = null;
 
-    var fixation = {
+    var id_entry = {
+      type: 'survey-text',
+      questions: [
+        {prompt: 'Enter the participant ID'}
+      ],
+      on_finish: function(data){
+        id = JSON.parse(data.responses).Q0;
+        jsPsych.data.addProperties({participant_id: id});
+      }
+    }
+    timeline.push(id_entry);
+
+<<<<<<< HEAD
+=======
+    var welcome = {
       type: "html-keyboard-response",
-      stimulus: '<div style="font-size:60px;">+</div>',
+      stimulus: "Welcome to the experiment.",
+      choices: ['C']
+    };
+    timeline.push(welcome);
+
+    var instructions = {
+      type: "html-keyboard-response",
+      stimulus: "<p>Several images will be presented sequentially. \
+       Each image will only be on the screen for about 100 milliseconds.</p> \
+       <p> One of the images may be rotated 90 degrees right or left. \
+       Watch for this image and remember if it is rotated right or left.</p> \
+       \
+       <p>Images of people and animals will appear, and sometimes they will be unpleasant. \
+       These will never be the rotated target image.</p>",
+    };
+    timeline.push(instructions);
+
+    var practice_instruction = {
+        type: "html-keyboard-response",
+        stimulus: "We will now begin a short practice session."
+    }
+
+>>>>>>> 0881d54ed9b3155ffa4c57a245efec32706c1045
+    var fixation = {
+      type: "html-button-response",
+      stimulus: '',
+      choices: ['+'],
       button_html: '<button class="fixation">%choice%</button>',
       choices: jsPsych.NO_KEYS,
       trial_duration: 1000,
@@ -404,7 +453,10 @@
 
     var debrief = {
       type: "html-keyboard-response",
-      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!'
+      stimulus: 'Congratulations! You have completed all of the trials. Thank you for helping us with our research!',
+      on_start: function(){
+        jsPsych.data.get().localSave('csv','participant_'+id+'_behavioral.csv');
+      }
     };
     timeline.push(debrief);
 
