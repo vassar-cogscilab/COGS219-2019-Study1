@@ -358,7 +358,7 @@
           // if the distractor should be here, we get the right kind of distractor...
           if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
             var distractor = distractors_neg.pop();
-            return "<p><img class= 'stimulus' src='negative/" + distractor + "'></img></p>"
+            return "<p><img class= 'stimulus' src='images/negative/" + distractor + "'></img></p>"
           } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
             var distractor = distractors_neu.pop();
             return "<p><img class= 'stimulus' src='images/neutral/" + distractor + "'></img></p>"
