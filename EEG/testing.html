@@ -310,7 +310,9 @@
     // baseline stimuli
     var b = {
       type: "html-keyboard-response",
-      stimulus: function() { return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>" },
+      stimulus: function() {
+        return "<p><img class= 'stimulus' src='images/" + baselines.pop() + "'></img></p>"
+      },
       choices: jsPsych.NO_KEYS,
       trial_duration: jsPsych.timelineVariable('trial_duration'),
     }
@@ -345,18 +347,16 @@
       stimulus: function(){
         // imagine this if statement is checking if this is where a distractor OR target should be...
         if(jsPsych.timelineVariable('distractor_position', true) == 6){
-          if(jsPsych.timelineVariable('distractor_position', true) == 4){
-            // if the distractor should be here, we get the right kind of distractor...
-            if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
-              var distractor = distractors_neg.pop();
-              return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
-            } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
-              var distractor = distractors_neu.pop();
-              return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
-            } else {
-              var baseline = baselines.pop();
-              return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
-            }
+          // if the distractor should be here, we get the right kind of distractor...
+          if(jsPsych.timelineVariable('distractor_type', true) == 'neg'){
+            var distractor = distractors_neg.pop();
+            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+          } else if(jsPsych.timelineVariable('distractor_type', true) == 'neu'){
+            var distractor = distractors_neu.pop();
+            return "<p><img class= 'stimulus' src='images/" + distractor + "'></img></p>"
+          } else {
+            var baseline = baselines.pop();
+            return "<p><img class= 'stimulus' src='images/" + baseline + "'></img></p>"
           }
         } else if (jsPsych.timelineVariable('distractor_position', true) == 4 && jsPsych.timelineVariable('target_lag', true) == 2) {
           // if the target should be here, we get the right kind of target...
