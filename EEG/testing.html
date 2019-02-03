@@ -334,12 +334,16 @@
             data.correct = null;
         }
         jsPsych.hardware.netstation.sendEvent({
-          key: 'xxxx',
+          key: 'stm+',
           timestamp: 0,
-          label: '',
-          description: '',
+          label: 'distractor',
+          description: 'distractor onset',
           table: {
-            correct: data.correct
+            correct: data.correct,
+            dispos: data.distractor_position,
+            distyp: data.distractor_type,
+            tarori: data.target_orientation,
+            tarlag: data.target_lag
           }
         });
       }
