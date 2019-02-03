@@ -59,6 +59,8 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
   }
 
   plugin.trial = function(display_element, trial) {
+	  
+	var trial_data = {};
 
     var new_html = '<div id="jspsych-html-keyboard-response-stimulus">'+trial.stimulus+'</div>';
 
@@ -68,7 +70,25 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
     }
 
     // draw
-    display_element.innerHTML = new_html;
+    var frames = 0;
+    window.requestAnimationFrame(function(ts){
+      display_element.innerHTML = new_html;
+      // end trial if trial_duration is set
+      if (trial.trial_duration !== null) {
+        var check_timeout = function(){
+          if(frames==0){
+            trial_data.stim_onset = Date.now(); // not performance.now because of EGI sync needing mod int
+          }
+          if(frames >= trial.trial_duration){
+            end_trial();
+          } else {
+            frames++;
+            window.requestAnimationFrame(check_timeout);
+          }
+        }
+        window.requestAnimationFrame(check_timeout);
+      }
+    });
 
     // store response
     var response = {
@@ -88,11 +108,11 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
       }
 
       // gather the data to store for the trial
-      var trial_data = {
-        "rt": response.rt,
-        "stimulus": trial.stimulus,
-        "key_press": response.key
-      };
+      
+      trial_data.rt = response.rt;
+      trial_data.stimulus = trial.stimulus;
+      trial_data.key_press = response.key;
+      
 
       // clear the display
       display_element.innerHTML = '';
@@ -136,12 +156,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
       }, trial.stimulus_duration);
     }
 
-    // end trial if trial_duration is set
-    if (trial.trial_duration !== null) {
-      jsPsych.pluginAPI.setTimeout(function() {
-        end_trial();
-      }, trial.trial_duration);
-    }
+    
 
   };
 
