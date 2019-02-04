@@ -79,7 +79,12 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
           if(frames==0){
             trial_data.stim_onset = Date.now(); // not performance.now because of EGI sync needing mod int
           }
-          if(frames >= trial.trial_duration - 1){
+          if(trial.post_trial_gap > 0){
+            var adjust = 1;
+          } else {
+            var adjust = 2;
+          }
+          if(frames >= trial.trial_duration - adjust){
             end_trial();
           } else {
             frames++;
@@ -115,7 +120,9 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
       
 
       // clear the display
-      display_element.innerHTML = '';
+      if(trial.post_trial_gap > 0){
+        display_element.innerHTML = '';
+      }
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);
