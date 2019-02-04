@@ -79,7 +79,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
           if(frames==0){
             trial_data.stim_onset = Date.now(); // not performance.now because of EGI sync needing mod int
           }
-          if(frames >= trial.trial_duration){
+          if(frames >= trial.trial_duration - 1){
             end_trial();
           } else {
             frames++;
