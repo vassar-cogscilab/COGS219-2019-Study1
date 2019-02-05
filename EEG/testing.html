@@ -306,9 +306,27 @@
     };
     timeline.push(instructions);
 
+    var left_example = {
+      type: 'html-button-response',
+      stimulus: '<p><img class="stimulus left-rotate" src="images/target/'+targets[0]+'"></img></p>'+
+        '<p>This is an example of an image rotated to the left.</p>',
+      choices: ['Continue']
+    }
+    timeline.push(left_example);
+
+    var right_example = {
+      type: 'html-button-response',
+      stimulus: '<p><img class="stimulus" src="images/target/'+targets[1]+'"></img></p>'+
+        '<p>This is an example of an image rotated to the right.</p>',
+      choices: ['Continue']
+    }
+    timeline.push(right_example);
+
     var practice_instruction = {
         type: "html-button-response",
         stimulus: "<p>We will now begin a short practice session.</p> \
+        <p>A + symbol will appear in the middle of the screen. Please fix your gaze on the center of the +, and then click the mouse button to begin the image sequence.</p> \
+        <p>Please avoid blinking or eye movements while the images are on the screen.</p>\
         <p>The image sequence will start relatively slow. After a few sequences, it will speed up.</p>",
         choices: ['I am ready']
     }
@@ -621,8 +639,8 @@
       type: "html-keyboard-response",
       stimulus: '<p>Congratulations! You have completed all of the trials. Thank you for helping us with our research!</p>'+
         '<p>Please alert the researcher that you have finished the experiment.</p>',
-      choices: ['C'],
-      on_finish: function(){
+      choices: jsPsych.NO_KEYS,
+      on_start: function(){
         jsPsych.data.get().localSave('csv','participant_'+id+'_behavioral.csv');
       }
     };
