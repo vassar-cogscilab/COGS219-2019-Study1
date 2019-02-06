@@ -197,14 +197,10 @@
       '9525-a-lonely-single-tree-in-a-field-pv.jpg',
       'adventure-desert-landscape-6778.jpg',
       'beach1.jpeg',
-      'berlin-51058_640.jpg',
       'buildin.png',
       'buildin2.png',
-      'buildin3.png',
-      'buildin4.jpg',
       'buildin5.jpg',
       'building1.jpg',
-      'building13.jpg',
       'building15.jpg',
       'building17.jpg',
       'building19.jpg',
@@ -228,7 +224,6 @@
       'landscape3.jpg',
       'landscape32.jpg',
       'lighthouse-843522_640.jpg',
-      'london-3598951_640.jpg',
       'lone-tree-1934897_640.jpg',
       'lone-tree.png',
       'lookout_tower.jpg',
@@ -238,9 +233,14 @@
       'oak-456524_640.jpg',
       'palm-trees-1209125_640.jpg',
       'petronas-towers-433081_1920.jpg',
-      'rome-3944257_640.jpg',
+      'pexels-photo-1102846.jpeg',
+      'pexels-photo-1123982.jpeg',
+      'pexels-photo-1534411.jpeg',
+      'pexels-photo-210683.jpeg',
+      'pexels-photo-236294.jpeg',
+      'pexels-photo-602607.jpeg',
+      'pexels-photo-932328.jpeg',
       'sand-3339890_640.jpg',
-      'seoul-410266_1920.jpg',
       'shotstash_0036-1-1100x734.jpg',
       'skyscraper-3855012_640.jpg',
       'specphotops-563427-unsplash.jpg',
@@ -646,12 +646,31 @@
       type: "html-keyboard-response",
       stimulus: '<p>Congratulations! You have completed all of the trials. Thank you for helping us with our research!</p>'+
         '<p>Please alert the researcher that you have finished the experiment.</p>',
-      choices: jsPsych.NO_KEYS,
+      choices: ['C'],
       on_start: function(){
         jsPsych.data.get().localSave('csv','participant_'+id+'_behavioral.csv');
       }
     };
     timeline.push(debrief);
+
+    var score = {
+      type: 'html-keyboard-response',
+      stimulus: function(){
+        var test_data = jsPsych.data.get().filter({phase: 'test'});
+        var overall = Math.round(100*(test_data.filter({correct: true}).count() / test_data.count()));
+        var lag_2 = test_data.filter({target_lag: 2});
+        var negative = Math.round(100*(lag_2.filter({distractor_type: 'neg', correct: true}).count() / lag_2.filter({distractor_type: 'neg'}).count()));
+        var neutral = Math.round(100*(lag_2.filter({distractor_type: 'neu', correct: true}).count() / lag_2.filter({distractor_type: 'neu'}).count()));
+        var baseline = Math.round(100*(lag_2.filter({distractor_type: 'bas', correct: true}).count() / lag_2.filter({distractor_type: 'bas'}).count()));
+        var html = "<p>Overall accuracy: "+overall+"%</p>";
+        html += "<p>Lag 2, Negative: "+negative+"%</p>";
+        html += "<p>Lag 2, Neutral: "+neutral+"%</p>";
+        html += "<p>Lag 2, Baseline: "+baseline+"%</p>";
+        return html;
+      },
+      choices: jsPsych.NO_KEYS
+    }
+    timeline.push(score);
 
     jsPsych.init({
       timeline: timeline,
