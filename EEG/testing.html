@@ -47,6 +47,7 @@
     }
 
     </style>
+    <style id="cursor-style"></style>
   </head>
   <body>
   </body>
@@ -339,6 +340,9 @@
       button_html: '<button class="fixation">%choice%</button>',
       on_start: function(){
         jsPsych.hardware.netstation.sync();
+      },
+      on_finish: function(){
+        document.querySelector('#cursor-style').innerText = "html, body, img { cursor: none; }";
       }
     };
 
@@ -513,6 +517,9 @@
         '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% - 60px);  right: calc(50% - 180px);">RIGHT<BR>(SOMEWHAT SURE)</button>',
         '<button class="jspsych-btn coolButton" style= "position: absolute;  top: calc(50% + 30px);  right: calc(50% - 180px);">RIGHT<BR>(GUESS)</button>'
       ],
+      on_start: function(){
+        document.querySelector('#cursor-style').innerText = "";
+      },
 
       on_finish: function(data){ // data will contain all properties recorded during the trial, including button_pressed and target_direction
         if(data.target_orientation == "left"){
